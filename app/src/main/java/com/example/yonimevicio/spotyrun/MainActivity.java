@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
     private static final String CLIENT_ID = "22c38c02421f4087a5c0fe6a9fafd666";
-    private static final String REDIRECT_URI = "com.example.toni.spotifylogin://callback";
+    private static final String REDIRECT_URI = "com.example.yonimevicio.spotyrun://callback";
     private static final int REQUEST_CODE = 1337;
     private SpotifyAppRemote mSpotifyAppRemote;
     private String TOKEN = "";
