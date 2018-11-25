@@ -6,6 +6,8 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -32,15 +34,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Request code will be used to verify if result comes from the login activity. Can be set to any integer.
     private static final String CLIENT_ID = "22c38c02421f4087a5c0fe6a9fafd666";
-    private static final String REDIRECT_URI = "com.example.toni.spotifylogin://callback";
+    private static final String REDIRECT_URI = "com.example.yonimevicio.spotyrun://callback";
     private static final int REQUEST_CODE = 1337;
     private SpotifyAppRemote mSpotifyAppRemote;
     private String TOKEN = "";
     private String USER_ID= "";
+
+    private Button stopButton;
+    private Button resumeButton;
 
 
     public MainActivity(){
@@ -58,7 +63,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
+
+        stopButton = (Button)findViewById(R.id.button2);
+        resumeButton = (Button)findViewById(R.id.button3);
 
 
         AuthenticationRequest.Builder builder =
@@ -68,6 +76,9 @@ public class MainActivity extends AppCompatActivity {
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+        stopButton.setOnClickListener(this);
+        resumeButton.setOnClickListener(this);
 
 
 
@@ -306,5 +317,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.button2:
+                mSpotifyAppRemote.getPlayerApi().pause();
+                break;
+            case R.id.button3:
+                mSpotifyAppRemote.getPlayerApi().resume();
+
+            default:
+                break;
+        }
     }
 }

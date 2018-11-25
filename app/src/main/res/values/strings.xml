@@ -6,4 +6,9 @@
     <string name="section1">Hello World from section: %1$d</string>
     <string name="section2">Hello World from section: %1$d</string>
     <string name="section3">Hello World from section: %1$d</string>
+
+
+    <string name="channel_name">HELLO</string>
+    <string name="channel_description">HELLO</string>
+
 </resources>

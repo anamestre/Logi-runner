@@ -1,7 +1,10 @@
 package com.example.yonimevicio.spotyrun;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
@@ -36,8 +39,11 @@ public class MenuPrincipal extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
-    private NotificationCompat.Builder mBuilder;
-    private NotificationManager notificationManager;
+    //private NotificationCompat.Builder mBuilder;
+    private NotificationManagerCompat notificationManager;
+
+    private String CHANNEL_ID = "HELLO";
+
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -47,6 +53,7 @@ public class MenuPrincipal extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createNotificationChannel();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,13 +65,28 @@ public class MenuPrincipal extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mBuilder = new NotificationCompat.Builder(this, "default_channel")
+        /*mBuilder = new NotificationCompat.Builder(this, "default")
                 .setSmallIcon(R.mipmap.main_notification)
                 .setContentTitle("pruebas")
-                .setContentText("mas pruebas");
+                .setContentText("mas pruebas")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);*/
 
-        notificationManager =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        //notificationManager = NotificationManagerCompat.from(this);
 
+        Intent intent = new Intent(this, Main2Activity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.main_notification)
+                .setContentTitle("HELLO")
+                .setContentText("HELLO")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+
+        final NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +94,13 @@ public class MenuPrincipal extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                notificationManager.notify(1,mBuilder.build());
+
+                //notificationManager.notify(1, mBuilder.build());
+
+
+                MainActivity reproducir = new MainActivity();
+                Intent myItent = new Intent(view.getContext(),MainActivity.class);
+                view.getContext().startActivity(myItent);
 
             }
         });
@@ -185,6 +213,22 @@ public class MenuPrincipal extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             return 3;
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 }
