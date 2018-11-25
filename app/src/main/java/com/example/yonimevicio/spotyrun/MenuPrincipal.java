@@ -1,5 +1,6 @@
 package com.example.yonimevicio.spotyrun;
 
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -36,7 +37,7 @@ public class MenuPrincipal extends AppCompatActivity {
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private NotificationCompat.Builder mBuilder;
-    private NotificationManagerCompat notificationManager;
+    private NotificationManager notificationManager;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -57,12 +58,13 @@ public class MenuPrincipal extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        mBuilder = new NotificationCompat.Builder(this, "default")
+        mBuilder = new NotificationCompat.Builder(this, "default_channel")
                 .setSmallIcon(R.mipmap.main_notification)
                 .setContentTitle("pruebas")
-                .setContentText("mas pruebas")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        notificationManager = NotificationManagerCompat.from(this);
+                .setContentText("mas pruebas");
+
+        notificationManager =(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,9 +72,7 @@ public class MenuPrincipal extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                MainActivity reproducir = new MainActivity();
-                Intent myItent = new Intent(view.getContext(),MainActivity.class);
-                view.getContext().startActivity(myItent);
+                notificationManager.notify(1,mBuilder.build());
 
             }
         });
